@@ -1,0 +1,17 @@
+---
+title: "Assignment 1a"
+author: "Claudia Flores"
+date: "2/09/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Q1: Why are you taking this course?
+
+I am taking this course because I want to practice coding. Also, I had trouble creating loops and functions in past data courses, so I will also like to sharpen that skill.
+
+## Q2: What is your data science background?
+Before coming to Bren, I had no data science background. I had never written any code. I feel comfortable working with R Studio and troubleshooting code. For my internships over the summer, I only worked in R Studio and did a lot of data wrangling and statistical analyses. 
