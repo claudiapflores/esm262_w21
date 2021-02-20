@@ -1,0 +1,78 @@
+---
+title: "Assignment 2a"
+author: "Claudia Flores, Anthony Luna, Gabriel De La Rosa, Mariano Viz"
+date: "2/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+# Insert packages
+library(here) # for source function to find function in directory
+library(tidyverse) # for ggplot and tibble
+```
+
+# Automobile Power Generation
+
+by Anthony Luna, Gabriel De La Rosa, Mariano Viz, Claudia Flores
+
+
+
+
+```{r}
+## Parameters to make power generation function
+##
+# g = gravity,
+# p_air = density of air
+# crolling = rolling drag coefficient
+# cdrag = aerodynamic drag coefficient
+##
+## Inputs to make a power generation function
+##
+# m = car mass
+# V = car speed
+# A = surface area
+
+## Function
+power_gen <- function(m, V, A, g = 9.8, p_air = 1.2, crolling = 0.015, cdrag = 0.3){
+  # Body 
+  Pb <- crolling * m * g * V + 0.5 * A * p_air * cdrag * V^3
+  # Output is the power output
+  return(Pb)
+}
+
+# Source the function and label it "power_gen.R"
+source(here("R", "power_gen.R"))
+```
+
+
+
+```{r}
+## Run the function for different car sizes and speeds 
+# speeds to use are 30,80,120, and 40 km/hr
+# big car mass is 31752 kg
+# small car mass is 75% of the big car mass (31752 kg)
+# surface area of car is 9 meters^2
+
+# Function for big and small cars
+big_car <- power_gen(V = c(30, 80, 120, 40), m = 31752, A = 9) 
+small_car <- power_gen(V = c(30, 80, 120, 40), m = 31752*0.75, A = 9)
+```
+
+```{r}
+# Create a data frame for the different speeds and car sizes calculated
+df <- tibble(speed = c(30, 80, 120, 40), big_car = big_car, small_car = small_car)
+
+# Graph the data frame created for the different speeds and car sizes calculated
+
+ggplot(df) + # Insert data frame to create a ggplot
+  geom_line(aes(x = speed, y = big_car), color = "green") + # Create a line to plot speeds for big cars
+  geom_line(aes(x = speed, y = small_car), color = "cyan") + # Create a line to plot speeds for small cars
+  theme_bw() + # theme is black and white
+  labs(title = "Power generation at different highway speeds", 
+       x = "Speed (km/h)",
+       y = "Power (watts)") # labels for title and x and y axis)
+  
+```
