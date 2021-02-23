@@ -1,0 +1,128 @@
+---
+title: 'Assignment 2b: Automobile Power Generation Loop'
+author: "Claudia Flores,Anthony Luna, Gabriel De La Rosa, Mariano Viz"
+date: "2/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+```
+
+```{r}
+# Source the power_gen.R function
+source(here("R", "power_gen.R"))
+```
+
+
+```{r}
+### Recreate possible_cars and add an additional car
+
+# Create a data frame to store information on possible cars
+possible_cars = data.frame(name = c("A","B","C","D"),
+                           mass=c(10000,65000,38000,30000), 
+                           area = c(22,30,22,10)
+                           )
+
+# Convert speed from km/hr to m/s
+speed_base = 120 * 0.28
+
+## I have one mass and area for each car and only one speed
+  # I can estimate power for each car type
+  # Add to the data structure
+
+possible_cars$power = power_gen(V=speed_base, 
+                                A = possible_cars$area, 
+                                m = possible_cars$mass
+                                )
+
+# Bar Chart Graph
+
+ggplot(data = possible_cars, 
+       aes(x = mass, 
+           y = power, 
+           fill=as.factor(area))) +
+  geom_col() + 
+  labs(y = "Power (Watts)", 
+       x="Mass (kg)"
+       )
+```
+
+```{r}
+### Create a Random Sample
+
+# Create a sample of 100
+nsample = 100
+
+# Create a random sample of 100 random rolling coefficients with given values of min = 0.01 and max = 0.03
+rolling_coefficient = runif(n = 100, 
+                            min = 0.01, 
+                            max = 0.03
+                            )
+
+# Bring up a summary of statistics 
+summary(rolling_coefficient)
+
+# Plot a density plot
+
+plot(density(rolling_coefficient), 
+     ylab = "Distribution of Rolling Coefficients"
+     )
+
+### Create a Data Frame for 'for loop'
+
+# Create a data frame with row length 100 (same as rolling_coefficient) and column width 4 (same as possible_cars)
+
+powerall4 = as.data.frame(matrix
+                          (nrow = length(rolling_coefficient), 
+                            ncol=nrow(possible_cars))
+                          )
+
+# Adding column names to data frame powerall4 using the possible_cars data frame column names
+
+colnames(powerall4)= possible_cars$name
+
+### 'For loop' using the power_gen() function
+
+# Indexing into a matrix (powerall4) by row and column 
+
+for (i in 1:nrow(possible_cars)) 
+  {
+  powerall4[,i] = 
+    power_gen(A=possible_cars$area[i], 
+              m=possible_cars$mass[i], 
+              V=speed_base, 
+              crolling = rolling_coefficient
+              )
+  }
+
+### Plotting
+
+# Turn columns into rows
+
+powerall4 = powerall4 %>% 
+  pivot_longer(cols = everything(), 
+               names_to = "car", 
+               values_to = "power")
+
+# Box-Plot Plot for powerall4 data frame
+
+loop_plot = ggplot(powerall4, 
+  aes(x = car, 
+      y= power, 
+      fill=car)) +
+  geom_boxplot() +
+  labs(title = "Power for Four Types of Cars - For Loop", 
+       y = "Car", 
+       x = "Power (Watts)", 
+       fill = "Car")
+
+# Call the plot
+loop_plot
+```
+
+
+
