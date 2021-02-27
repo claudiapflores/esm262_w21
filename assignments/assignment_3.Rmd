@@ -1,0 +1,84 @@
+---
+title: "Assignment 3"
+author: "Claudia Flores"
+date: "2/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+### Function 
+
+## Create a function for flood recurrence interval probability
+# Function finds the probability in any given year that a flood of that magnitude will be equaled or exceeded 
+
+# Y = years in records
+# T = recurrence interval (note: not an independent input, but a dependent input)
+# R = magnitude ranking
+
+recurrence_interval_prob <- function(Y,R){
+  # Body 
+  T <- Y + 1
+  Prob <- (1)/(T/R)
+  # Error checking
+  R = ifelse((R < 0), return("Ranking must be a positive integer"), R)
+  # Output is the probability 
+  return(Prob)
+}
+
+# Testing for Years in records = 41 and Magnitude Ranking = 1
+
+recurrence_interval_prob(41,1)
+
+##### Example
+### Data Frame
+
+## Create a data frame with four columns named: R, Maximum Annual Discharge m^3/s, Year, and Y 
+
+ranks = data.frame(R = c(1,2,3,4,5,6,7,8,9,10), # Ranking magnitude
+                   maximum_annual_discharge_m3_s = c(507,453,343,323,300,299,275,260,100,50),
+                   year = c(2010,1975,1990,2004,2013,2006,1993,1991,1996,1999),
+                   Y = (10) # Years on record
+                   )
+
+## Create a data frame to put results from loop
+results = as.data.frame(matrix
+                          (nrow = length(ranks), # Number of rows
+                            ncol= 1) # Number of columns
+                          )
+
+### Loop
+
+## Run a loop through the ranks data frame created using the R and Y columns 
+for (i in 1:nrow(ranks)) # For each value (i) in the rows under the rank column
+  {
+  results[i,1] = # Place the result for each value (i) in the results data frame in column 1
+    recurrence_interval_prob( # Function
+      Y=ranks$Y[i], # Use values in the ranks data frame column Y
+      R=ranks$R[i] # Use values in the ranks data frame column R
+              )
+}
+
+## Name your column where your probability results are to "Prob"
+names(results)[1] <- "Prob"
+
+
+### Case_when 
+
+## Add a column for results of the probability risk and use case_when to determine what the probability risk is based on the parameters of Prob > 0.5 is high, Prob = 0.5 is medium, and Prob < 0.5 is low
+results <- results %>% 
+  mutate(Prob_Risk = # Name of new column
+           case_when( # Print the following "" if certain conditions for Prob results are met
+             results$Prob > 0.5 ~ "High",
+             results$Prob == 0.5 ~ "Medium",
+             results$Prob < 0.5 ~ "Low"
+             )
+         )
+
+```
+
+
