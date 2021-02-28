@@ -114,7 +114,7 @@ residence_time(100,0)
 ## Set up initial conditions
 storage <- c() # create an output/space for storage of results 
 in_res = 100 # the amount inside the reservoir is 100 gallons
-out = 1 # the initial amount of outflow for the reservoir 
+out = 1 # the initial amount of outflow (gallons/year) for the reservoir 
   
 while((in_res > out) && (out < 20)) # conditions that need to be met initially or at some point for the loop to run) 
   {
