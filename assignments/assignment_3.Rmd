@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+case_when
 ```{r}
 ### Function 
 
@@ -25,7 +26,9 @@ recurrence_interval_prob <- function(Y,R){
   T <- Y + 1
   Prob <- (1)/(T/R)
   # Error checking
-  R = ifelse((R < 0), return("Ranking must be a positive integer"), R)
+  R = ifelse((R < 0), 
+             return("Ranking must be a positive integer"), 
+             R)
   # Output is the probability 
   return(Prob)
 }
@@ -81,4 +84,47 @@ results <- results %>%
 
 ```
 
+while loop
+```{r}
+### Function 
+
+## Create a function for residence time of a water molecule in a reservoir 
+# Function finds the time a water molecule spends in a reservoir 
+
+# in_res = amount of gallons of water in reservoir 
+# out = amount of gallons of water in reservoir that flow out per year
+
+residence_time <- function(in_res,out){
+  # Body 
+  residence_time <- in_res/out
+  # Error checking
+  out = ifelse((out <= 0), 
+               return("Is resevoir is a terminal lake?"), 
+               out)
+  # Output is residence time
+  return(residence_time)
+}
+
+
+## Test function and error check
+residence_time(100,0)
+
+### While loop
+
+## Set up initial conditions
+storage <- c() # create an output/space for storage of results 
+in_res = 100 # the amount inside the reservoir is 100 gallons
+out = 1 # the initial amount of outflow for the reservoir 
+  
+while((in_res > out) && (out < 20)) # conditions that need to be met initially or at some point for the loop to run) 
+  {
+  year <- residence_time(in_res, out) # function
+  out <- 1 + out # keep adding 1 to the initial amount of outflow and then on until 20 is reached
+  storage <- c(storage,year) # store results into this vector name
+  
+}
+
+print(storage) # show results stored into the vector name
+print(out) # show the final outflow value 
+```
 
