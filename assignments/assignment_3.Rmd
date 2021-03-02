@@ -30,7 +30,7 @@ recurrence_interval_prob <- function(Y,R){
              return("Ranking must be a positive integer"), 
              R)
   # Output is the probability 
-  risk <- case_when(
+  risk <- case_when( # Print the following "" if certain conditions (e.g. <,>,=...) for Prob results are met
              Prob > 0.5 ~ "High",
              Prob == 0.5 ~ "Medium",
              Prob < 0.5 ~ "Low"
@@ -38,14 +38,18 @@ recurrence_interval_prob <- function(Y,R){
   return(risk)
 }
 
-# Testing for Years in records = 41 and Magnitude Ranking = 1
+# Example fo years in records = 41 and Magnitude Ranking = 1
 
 recurrence_interval_prob(41,1)
+```
 
-##### Example
+WARNING: another case_when example using it outside the function 
+```{r}
+######################## Tried another way to do case_when outside of the function ########################
+
 ### Data Frame
 
-## Create a data frame with four columns named: R, Maximum Annual Discharge m^3/s, Year, and Y 
+## Create a data frame to run your function using a loop and name four columns: R, Maximum Annual Discharge m^3/s, Year, and Y 
 
 ranks = data.frame(R = c(1,2,3,4,5,6,7,8,9,10), # Ranking magnitude
                    maximum_annual_discharge_m3_s = c(507,453,343,323,300,299,275,260,100,50),
@@ -53,7 +57,7 @@ ranks = data.frame(R = c(1,2,3,4,5,6,7,8,9,10), # Ranking magnitude
                    Y = (10) # Years on record
                    )
 
-## Create a data frame to put results from loop
+## Create a data frame to put probability results from loop
 results = as.data.frame(matrix
                           (nrow = length(ranks), # Number of rows
                             ncol= 1) # Number of columns
@@ -61,7 +65,7 @@ results = as.data.frame(matrix
 
 ### Loop
 
-## Run a loop through the ranks data frame created using the R and Y columns 
+## Run a loop through the R and Y columns in the ranks data frame created to get probability results
 for (i in 1:nrow(ranks)) # For each value (i) in the rows under the rank column
   {
   results[i,1] = # Place the result for each value (i) in the results data frame in column 1
