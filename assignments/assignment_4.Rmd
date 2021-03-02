@@ -23,7 +23,7 @@ library(tidyverse)
 # t = total number of fish in factor string
 # p = variable to hold histogram plot
 
-fish_summary <- function(name_vec, graph = c(TRUE,FALSE)){
+fish_summary <- function(name_vec, graph = FALSE){
   # Body 
   f <- as.factor(name_vec)
   c <- names(which.max(summary(f)))
@@ -54,7 +54,7 @@ fish_data <- as.vector(fish_data$x)
 ### Example 
 
 ## Run fish_summary() function with 'fish.txt' file
-fish_summary(fish_data)
+fish_summary(fish_data, graph = TRUE)
 ```
 
 
