@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(here)
 ```
 
 case_when
@@ -37,6 +38,9 @@ recurrence_interval_prob <- function(Y,R){
              )
   return(risk)
 }
+
+# Source the recurrence_interval_prob.R function
+source("../R/recurrence_interval_prob.R")
 
 # Example fo years in records = 41 and Magnitude Ranking = 1
 
@@ -93,47 +97,48 @@ results <- results %>%
 
 ```
 
+
 while loop
 ```{r}
 ### Function 
 
-## Create a function for residence time of a water molecule in a reservoir 
-# Function finds the time a water molecule spends in a reservoir 
+## Create a function for the amount of rebate a household will receive for removing turf from their irrigated space
+# Function finds the amount of rebate received
 
-# in_res = amount of gallons of water in reservoir 
-# out = amount of gallons of water in reservoir that flow out per year
+# sq_ft = amount of turf removed in sq_ft 
+# rebate_price = USD rebate price for each sq_ft removal of turf 
 
-residence_time <- function(in_res,out){
-  # Body 
-  residence_time <- in_res/out
+rebate_turf_removal <- function(sq_ft,rebate_price = 2.13){
   # Error checking
-  out = ifelse((out <= 0), 
-               return("Is resevoir is a terminal lake?"), 
-               out)
-  # Output is residence time
-  return(residence_time)
+  sq_ft = ifelse((sq_ft < 0), # Sq-ft has to be greater than zero to receive any kind of rebate
+               return("Did you remove all the turf already?"), 
+               sq_ft)
+  # Body 
+  total_rebate <- sq_ft * rebate_price
+  # Output is rebate received for turf removal in USD
+  return(total_rebate)
 }
 
-
-## Test function and error check
-residence_time(100,0)
+# Source the rebate_turf_removal.R function
+source("../R/rebate_turf_removal.R")
 
 ### While loop
 
-## Set up initial conditions
-storage <- c() # create an output/space for storage of results 
-in_res = 100 # the amount inside the reservoir is 100 gallons
-out = 1 # the initial amount of outflow (gallons/year) for the reservoir 
+## Set up initial conditions to run loop
+
+sq_ft = 0 # loop will begin with square feet as zero so in the equation it starts at one
+rebate_price = 2.13 # this is the rebate price for every sq_ft removal of turf
+total_rebate = 0 # loop will start off with the total rebate given as zero
   
-while((in_res > out) && (out < 20)) # conditions that need to be met initially or at some point for the loop to run) 
+# How much sq ft of turf from my 900 sq ft yard do I need to remove to receive at least 500 USD?
+while((total_rebate <= 500) & (sq_ft <= 900)) # run loop until at least 500 dollars of rebate is received and must be equal to or less than the total amount of turf that can actually be removed
   {
-  year <- residence_time(in_res, out) # function
-  out <- 1 + out # keep adding 1 to the initial amount of outflow and then on until 20 is reached
-  storage <- c(storage,year) # store results into this vector name
-  
+  sq_ft = 1 + sq_ft # to loop through sq_ft values
+  total_rebate = rebate_turf_removal(sq_ft, rebate_price) # function to determine total rebate received
+ 
 }
 
-print(storage) # show results stored into the vector name
-print(out) # show the final outflow value 
+# Amount of sq ft needed to be removed to receive at least 500 USD worth of rebate
+print(sq_ft)
 ```
 
